@@ -85,7 +85,61 @@ After allowing time for the client to install and check in, the Devices list was
 
 ## Phase 2 — Device Lookup & Inventory
 
-*This phase has not yet been documented.*
+With clients enrolled and reporting in, the next task a support technician performs is looking up a device to understand what it is and what is running on it. SCCM collects this information automatically through hardware and software inventory cycles, and exposes it through a tool called Resource Explorer. This phase walks through using Resource Explorer to pull hardware data from MEL-CL-01, triggering a manual inventory cycle to force a refresh, and reviewing the data SCCM has collected across multiple hardware categories.
+
+### Step 1 — Opening Resource Explorer
+
+Resource Explorer is accessed by right-clicking any enrolled device in Assets and Compliance → Devices and selecting Start → Resource Explorer. This opens a separate window scoped to that device, with a tree on the left organized into Hardware, Hardware History, Software, and Diagnostic Files. All inventory data SCCM has ever collected about the machine lives here. MEL-CL-01 is the target throughout this phase since it is the workstation — the type of machine most support tickets will involve.
+
+### Step 2 — Viewing Processor Data
+
+Expanding Hardware and clicking Processor shows the CPU reported by the SCCM client on its last hardware inventory cycle. For MEL-CL-01, this is an Intel Core i7-8700T at 2.40GHz running on a 64-bit architecture. This is the same data a technician would use to verify specs before deploying resource-intensive software or troubleshooting performance complaints.
+
+![Resource Explorer showing processor data for MEL-CL-01](Phase-2-Device-Inventory/01-resource-explorer-processor.png)
+
+### Step 3 — Viewing Memory Data
+
+Clicking Physical Memory in the left tree shows the RAM inventory for the machine — capacity, speed, and slot information as reported by WMI. This is useful for determining whether a device meets minimum memory requirements for a software package before attempting deployment.
+
+![Resource Explorer showing physical memory data for MEL-CL-01](Phase-2-Device-Inventory/02-resource-explorer-memory.png)
+
+### Step 4 — Viewing Operating System Data
+
+The Operating System node shows the exact OS version, build number, service pack level, and architecture. This is one of the most commonly referenced inventory categories in a support environment — knowing whether a machine is running Windows 10 or Windows 11, and which build, determines patch applicability, upgrade eligibility, and compatibility with enterprise software.
+
+![Resource Explorer showing operating system data for MEL-CL-01](Phase-2-Device-Inventory/03-resource-explorer-os.png)
+
+### Step 5 — Viewing Disk Data
+
+The Disk Drives node shows the physical storage devices attached to the machine. For MEL-CL-01, SCCM reports a QEMU HARDDISK on the IDE interface with 2 partitions, reflecting the virtualized disk in the lab environment. In a production environment this view identifies drive model, interface type, and partition count — useful for storage capacity planning and troubleshooting disk-related issues.
+
+![Resource Explorer showing disk drive data for MEL-CL-01](Phase-2-Device-Inventory/04-resource-explorer-disk.png)
+
+### Step 6 — Triggering a Manual Inventory Cycle and Viewing Installed Applications
+
+Hardware inventory runs on a schedule, but it can be forced immediately using Client Notification. Right-clicking MEL-CL-01 in the Devices list and selecting Client Notification → Collect Hardware Inventory sends an instruction to the client to run its inventory cycle immediately and report back. After allowing a few minutes for the cycle to complete, Resource Explorer was refreshed. Installed Applications (64) now shows the 64-bit software installed on MEL-CL-01 as collected from the Windows registry — the same data a technician would use to verify software is present, check version numbers, or confirm a deployment succeeded.
+
+![Resource Explorer showing installed 64-bit applications on MEL-CL-01](Phase-2-Device-Inventory/05-resource-explorer-installed-apps.png)
+
+### Step 7 — Viewing Network Adapter Data
+
+The Network Adapter node shows the network interfaces on the machine — adapter name, MAC address, IP address, and whether DHCP is enabled. This inventory is valuable for network troubleshooting, asset tracking, and confirming that the correct adapter is active on a machine.
+
+![Resource Explorer showing network adapter data for MEL-CL-01](Phase-2-Device-Inventory/06-resource-explorer-network.png)
+
+### Step 8 — Reviewing Device Collections
+
+Device Collections are how SCCM groups machines for targeting. All Systems is the built-in collection that contains every enrolled device in the site. In Assets and Compliance → Device Collections, this collection confirms that MEL-CL-01 and MEL-DC-01 are both present and eligible to be targeted for deployments, remote actions, and compliance policies. Collections are the foundation of everything deployment-related in SCCM — nothing gets deployed to individual machines, only to collections.
+
+![Device Collections view showing All Systems and other built-in collections](Phase-2-Device-Inventory/07-device-collections.png)
+
+### Step 9 — Reviewing Client Properties
+
+Right-clicking MEL-CL-01 and selecting Properties opens the client properties dialog. This shows the assigned site code (MEL), client version (5.00.9141.1011), last active time, and domain membership. This is the summary view a technician checks to confirm a machine is healthy — that it is assigned to the right site, running the expected client version, and has communicated recently.
+
+![Client properties dialog for MEL-CL-01 showing site assignment and client version](Phase-2-Device-Inventory/08-client-properties.png)
+
+---
 
 ---
 
