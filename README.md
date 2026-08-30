@@ -141,8 +141,6 @@ Right-clicking MEL-CL-01 and selecting Properties opens the client properties di
 
 ---
 
----
-
 ## Phase 3 — Remote Control
 
 *This phase has not yet been documented.*
