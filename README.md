@@ -143,7 +143,29 @@ Right-clicking MEL-CL-01 and selecting Properties opens the client properties di
 
 ## Phase 3 — Remote Control
 
-*This phase has not yet been documented.*
+Remote Control is one of the most immediate tools available to a support technician using SCCM. When a user calls with a problem that is difficult to describe, or when a software deployment needs to be verified on the actual machine, Remote Control gives the technician a live view of the desktop and full mouse and keyboard control — without installing any third-party agent. This phase walks through enabling the Remote Control feature through client policy, configuring the firewall exception profiles, and establishing a working session to MEL-CL-01.
+
+### Step 1 — Enabling Remote Tools in Default Client Settings
+
+Remote Control is off by default in a fresh SCCM installation. To enable it, the setting must be changed in the Default Client Settings policy, which applies to every enrolled device in the site. In the SCCM console, navigating to Administration → Client Settings → Default Client Settings, then opening Properties and selecting Remote Tools on the left, reveals the full Remote Control configuration. Setting "Enable Remote Control on clients" to Enabled activates the feature and exposes all of the related options: permission prompts, access level, permitted viewers, and notification behavior.
+
+The permitted viewers list is particularly important — only accounts listed here can initiate a Remote Control session. MELVINLAB\Administrator is included, which is the account being used throughout this lab. All other settings are left at their defaults: the user will be prompted for permission when a session starts, local administrators are granted access, and a taskbar icon notifies the end user that a session is active.
+
+![Default Client Settings showing Remote Tools enabled with full configuration](Phase-3-Remote-Control/01-remote-tools-client-settings.png)
+
+### Step 2 — Configuring Firewall Exception Profiles
+
+Clicking "Configure Settings" next to the Firewall exception profiles option opens a dialog that controls which Windows Firewall network profiles will have the Remote Control port exception applied automatically by the SCCM client. This is how SCCM manages the firewall rule on the managed machine without requiring manual intervention — when the client receives the policy, it creates the necessary inbound exception on port 2701 for the selected profiles. In this lab environment, the Domain profile covers all traffic between SCCM-managed machines on the MELVINLAB.local network.
+
+![Firewall exception profiles dialog for Remote Control](Phase-3-Remote-Control/02-remote-tools-firewall-profiles.png)
+
+### Step 3 — Connecting to MEL-CL-01 via Remote Control
+
+With Remote Tools enabled in policy and the client updated, initiating a Remote Control session is straightforward. In Assets and Compliance → Devices, right-clicking MEL-CL-01 and selecting Start → Remote Control launches the Configuration Manager Remote Control viewer. The viewer connects to the CmRcService on the client machine, the user is prompted for permission on the remote desktop, and once accepted, the full desktop is visible and controllable from MEL-SCCM-01.
+
+The screenshot below shows an active Remote Control session with MEL-CL-01's Windows 11 desktop displayed inside the viewer window on MEL-SCCM-01. The toolbar at the top of the viewer provides options for full-screen mode, clipboard transfer, and session settings. This is the view a support technician would use to walk through an issue with the user in real time, run diagnostics, or verify that a software deployment completed successfully.
+
+![Active Remote Control session showing MEL-CL-01 desktop in the viewer](Phase-3-Remote-Control/03-remote-control-session.png)
 
 ---
 
